@@ -30,6 +30,7 @@
     "@injectivelabs/exceptions": "^1.0.56",
     "@injectivelabs/networks": "^1.0.93",
     "@injectivelabs/sdk-ts": "^1.0.458",
+    "@injectivelabs/sdk-ui-ts": "^1.0.588",
     "@injectivelabs/ts-types": "^1.0.29",
     "@injectivelabs/utils": "^1.0.81",
     "@pinia/nuxt": "^0.4.7",

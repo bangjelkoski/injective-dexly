@@ -21,6 +21,7 @@ import {
   BigNumberInBase,
   DEFAULT_GAS_LIMIT,
   DEFAULT_BLOCK_TIMEOUT_HEIGHT,
+  sleep,
 } from "@injectivelabs/utils";
 import { EthereumChainId, ChainId } from "@injectivelabs/ts-types";
 import {
@@ -30,10 +31,27 @@ import {
   UnspecifiedErrorCode,
 } from "@injectivelabs/exceptions";
 import { recoverTypedSignaturePubKey } from "@injectivelabs/sdk-ts/dist/utils/transaction";
+import { Web3Client, Web3Composer } from "@injectivelabs/sdk-ui-ts";
 
-export const ENDPOINTS = getNetworkEndpoints(Network.MainnetK8s);
+export const CHAIN_ID = ChainId.Mainnet;
+export const ETHEREUM_CHAIN_ID = EthereumChainId.Mainnet;
+export const NETWORK = Network.MainnetK8s;
+export const alchemyRpcEndpoint = `https://eth-mainnet.alchemyapi.io/v2/${
+  import.meta.env.VITE_ALCHEMY_KEY
+}`;
+export const ENDPOINTS = getNetworkEndpoints(NETWORK);
 export const chainGrpcBankApi = new ChainGrpcBankApi(ENDPOINTS.grpc);
 export const indexerGrpcSpotApi = new IndexerGrpcSpotApi(ENDPOINTS.indexer);
+
+export const web3Client = new Web3Client({
+  network: NETWORK,
+  rpc: alchemyRpcEndpoint,
+});
+export const web3Composer = new Web3Composer({
+  network: NETWORK,
+  rpc: alchemyRpcEndpoint,
+  ethereumChainId: ETHEREUM_CHAIN_ID,
+});
 
 export const createAndBroadcastTransaction = async ({
   address,
@@ -59,8 +77,6 @@ export const createAndBroadcastTransaction = async ({
     }
   };
 
-  const ethereumChainId = EthereumChainId.Mainnet;
-  const chainId = ChainId.Mainnet;
   const ethereumAddress = getEthereumAddress(address);
 
   /** Account Details **/
@@ -87,7 +103,7 @@ export const createAndBroadcastTransaction = async ({
       timeoutHeight: timeoutHeight.toFixed(),
       chainId: ChainId.Mainnet,
     },
-    ethereumChainId,
+    ethereumChainId: ETHEREUM_CHAIN_ID,
   });
 
   /** Signing on Ethereum */
@@ -104,7 +120,7 @@ export const createAndBroadcastTransaction = async ({
   /** Preparing the transaction for client broadcasting */
   const txApi = new TxGrpcApi(ENDPOINTS.grpc);
   const { txRaw } = createTransaction({
-    chainId,
+    chainId: CHAIN_ID,
     message: message.toDirectSign(),
     signMode: SIGN_AMINO,
     fee: getStdFee(DEFAULT_GAS_LIMIT.toString()),
@@ -115,7 +131,7 @@ export const createAndBroadcastTransaction = async ({
   });
 
   const web3Extension = createWeb3Extension({
-    ethereumChainId,
+    ethereumChainId: ETHEREUM_CHAIN_ID,
   });
   const txRawEip712 = createTxRawEIP712(txRaw, web3Extension);
 
@@ -134,4 +150,59 @@ export const createAndBroadcastTransaction = async ({
   }
 
   return response;
+};
+
+export const broadcastWeb3Transaction = async (transaction: any) => {
+  const sendWeb3Transaction = async (transaction: unknown) => {
+    try {
+      return await (window as any).ethereum.request({
+        method: "eth_sendTransaction",
+        params: [transaction],
+      });
+    } catch (e: unknown) {
+      throw new MetamaskException(new Error((e as any).message), {
+        code: UnspecifiedErrorCode,
+        type: ErrorType.WalletError,
+      });
+    }
+  };
+
+  const getEthereumTransactionReceipt = async (txHash: string) => {
+    const ethereum = (window as any).ethereum;
+
+    const interval = 1000;
+    const transactionReceiptRetry = async () => {
+      const receipt = await ethereum.request({
+        method: "eth_getTransactionReceipt",
+        params: [txHash],
+      });
+
+      if (!receipt) {
+        await sleep(interval);
+        await transactionReceiptRetry();
+      }
+
+      return receipt;
+    };
+
+    try {
+      return await transactionReceiptRetry();
+    } catch (e: unknown) {
+      throw new MetamaskException(new Error((e as any).message), {
+        code: UnspecifiedErrorCode,
+        type: ErrorType.WalletError,
+      });
+    }
+  };
+
+  // Broadcast the transaction and wait for it to be included in a block
+  return await new Promise((resolve, reject) => {
+    sendWeb3Transaction(transaction)
+      .then(async (txHash) => {
+        getEthereumTransactionReceipt(txHash).then(() => {
+          resolve(txHash);
+        });
+      })
+      .catch(reject);
+  });
 };

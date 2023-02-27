@@ -3,6 +3,7 @@ import { useWalletStore } from "@/store/wallet";
 import { useExchangeStore } from "@/store/exchange";
 import { useIntervalFn } from "@vueuse/core";
 
+const router = useRouter();
 const walletStore = useWalletStore();
 const exchangeStore = useExchangeStore();
 
@@ -27,6 +28,10 @@ onMounted(() => {
     });
 });
 
+function handleBridgeClick() {
+  return router.push({ name: "bridge" });
+}
+
 useIntervalFn(() => {
   exchangeStore.fetchOrderbook();
 }, 5 * 1000);
@@ -37,6 +42,12 @@ useIntervalFn(() => {
     <h2 class="text-lg mr-4">
       Your wallet address:
       <span class="font-mono">{{ walletStore.address }}</span>
+      <span
+        class="text-blue-500 font-semibold ml-2 cursor-pointer"
+        @click="handleBridgeClick"
+      >
+        Bridge
+      </span>
     </h2>
 
     <div class="flex flex-wrap -mx-4">

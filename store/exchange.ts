@@ -1,15 +1,15 @@
 import { defineStore } from "pinia";
 import {
-  MsgCreateSpotLimitOrder,
   Address,
-  PriceLevel,
   SpotMarket,
+  PriceLevel,
+  MsgCreateSpotLimitOrder,
   spotPriceToChainPriceToFixed,
   spotQuantityToChainQuantityToFixed,
 } from "@injectivelabs/sdk-ts";
 import {
-  createAndBroadcastTransaction,
   indexerGrpcSpotApi,
+  createAndBroadcastTransaction,
 } from "@/app/Services";
 import { useWalletStore } from "./wallet";
 import { OrderType } from "@/app/types";

@@ -3,10 +3,17 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "strict": true,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "types": [
-      "@types/node",
       "@vueuse/nuxt",
       "@pinia/nuxt",
     ]
   },
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".output"
+  ],
 }

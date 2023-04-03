@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import {
+  ErrorType,
   MetamaskException,
   UnspecifiedErrorCode,
-  ErrorType,
 } from "@injectivelabs/exceptions";
 import { Coin, getInjectiveAddress, MsgSend } from "@injectivelabs/sdk-ts";
 import {

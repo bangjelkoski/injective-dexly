@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 import { getEthereumAddress } from "@injectivelabs/sdk-ts";
 import {
-  broadcastWeb3Transaction,
   NETWORK,
   web3Client,
   web3Composer,
+  broadcastWeb3Transaction,
 } from "@/app/Services";
 import { useWalletStore } from "./wallet";
 import { awaitForAll, BigNumberInBase } from "@injectivelabs/utils";

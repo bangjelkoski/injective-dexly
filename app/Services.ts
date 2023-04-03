@@ -1,27 +1,27 @@
 import { getNetworkEndpoints, Network } from "@injectivelabs/networks";
 import {
+  Msgs,
+  TxGrpcApi,
+  hexToBuff,
+  hexToBase64,
+  SIGN_AMINO,
   BaseAccount,
   ChainGrpcBankApi,
   ChainRestAuthApi,
-  ChainRestTendermintApi,
   createTransaction,
   createTxRawEIP712,
   createWeb3Extension,
   getEip712TypedData,
   getEthereumAddress,
-  hexToBase64,
-  hexToBuff,
   IndexerGrpcSpotApi,
-  Msgs,
-  SIGN_AMINO,
-  TxGrpcApi,
+  ChainRestTendermintApi,
 } from "@injectivelabs/sdk-ts";
 import {
+  sleep,
   getStdFee,
   BigNumberInBase,
   DEFAULT_GAS_LIMIT,
   DEFAULT_BLOCK_TIMEOUT_HEIGHT,
-  sleep,
 } from "@injectivelabs/utils";
 import { EthereumChainId, ChainId } from "@injectivelabs/ts-types";
 import {
@@ -30,7 +30,7 @@ import {
   TransactionException,
   UnspecifiedErrorCode,
 } from "@injectivelabs/exceptions";
-import { recoverTypedSignaturePubKey } from "@injectivelabs/sdk-ts/dist/utils/transaction";
+import { recoverTypedSignaturePubKey } from "@injectivelabs/sdk-ts";
 import { Web3Client, Web3Composer } from "@injectivelabs/sdk-ui-ts";
 
 export const CHAIN_ID = ChainId.Mainnet;
@@ -121,7 +121,7 @@ export const createAndBroadcastTransaction = async ({
   const txApi = new TxGrpcApi(ENDPOINTS.grpc);
   const { txRaw } = createTransaction({
     chainId: CHAIN_ID,
-    message: message.toDirectSign(),
+    message: message,
     signMode: SIGN_AMINO,
     fee: getStdFee(DEFAULT_GAS_LIMIT.toString()),
     pubKey: publicKeyBase64,
@@ -136,7 +136,7 @@ export const createAndBroadcastTransaction = async ({
   const txRawEip712 = createTxRawEIP712(txRaw, web3Extension);
 
   /** Append Signatures */
-  txRawEip712.setSignaturesList([signatureBuff]);
+  txRawEip712.signatures = [signatureBuff];
 
   /** Broadcast the transaction */
   const response = await txApi.broadcast(txRawEip712);

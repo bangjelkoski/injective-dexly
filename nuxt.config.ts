@@ -29,7 +29,7 @@ export default defineNuxtConfig({
       "process.env.DEBUG": JSON.stringify(process.env.DEBUG),
     },
 
-    plugins: [nodePolyfills({ protocolImports: true })],
+    plugins: [nodePolyfills({ protocolImports: false })],
 
     build: {
       sourcemap: false,
@@ -45,7 +45,7 @@ export default defineNuxtConfig({
     },
 
     optimizeDeps: {
-      exclude: ["fsevents", "node:fs/promises"],
+      exclude: ["fsevents"],
     },
   },
 });

@@ -20,15 +20,20 @@
     "vue-tsc": "^1.2.0"
   },
   "dependencies": {
-    "@injectivelabs/exceptions": "^1.10.0",
-    "@injectivelabs/networks": "^1.10.0",
-    "@injectivelabs/sdk-ts": "^1.10.22",
-    "@injectivelabs/sdk-ui-ts": "^1.10.27",
-    "@injectivelabs/ts-types": "^1.10.0",
-    "@injectivelabs/utils": "^1.10.0",
+    "@injectivelabs/exceptions": "^1.10.2",
+    "@injectivelabs/networks": "^1.10.3",
+    "@injectivelabs/sdk-ts": "^1.10.29",
+    "@injectivelabs/sdk-ui-ts": "^1.10.36",
+    "@injectivelabs/ts-types": "^1.10.1",
+    "@injectivelabs/utils": "^1.10.2",
     "@pinia/nuxt": "^0.4.7",
     "@vueuse/nuxt": "9.13.0",
     "buffer": "^6.0.3",
     "pinia": "^2.0.32"
+  },
+  "resolutions": {
+    "@ethereumjs/tx": "^4.1.1",
+    "**/libsodium": "npm:@bangjelkoski/noop",
+    "**/libsodium-wrappers": "npm:@bangjelkoski/noop"
   }
 }

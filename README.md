@@ -1,42 +1,33 @@
-# Nuxt 3 Minimal Starter
+# 🌟 Injective Dexly
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+_Minimal dex built on top of Injective_
 
-## Setup
+## ✨ Features
 
-Make sure to install the dependencies:
+---
 
-```bash
-# yarn
-yarn install
+## 📚 Getting Started
 
-# npm
-npm install
-
-# pnpm
-pnpm install
-```
-
-## Development Server
-
-Start the development server on http://localhost:3000
+1. Clone the repository
 
 ```bash
-npm run dev
+$ git clone git@github.com:bangjelkoski/injective-dexly.git
+$ cd injective-dexly
+$ yarn
 ```
 
-## Production
-
-Build the application for production:
+1. Duplicate the .env.example to .env and fill the values
+2. Compile the app
 
 ```bash
-npm run build
+$ yarn run dev
 ```
 
-Locally preview production build:
+---
 
-```bash
-npm run preview
-```
+## ⛑ Support
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Reach out to us at one of the following places!
+
+- Website at <a href="https://bangjelkoski.com" target="_blank">`bangjelkoski.com`</a>
+- Twitter at <a href="https://twitter.com/bangjelkoski" target="_blank">`@bangjelkoski`</a>

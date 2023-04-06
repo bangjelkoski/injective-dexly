@@ -10,10 +10,10 @@ import { useWalletStore } from "./wallet";
 import { awaitForAll, BigNumberInBase } from "@injectivelabs/utils";
 import { fetchGasPrice } from "@injectivelabs/sdk-ui-ts";
 
-export const USDT_ERC20_CONTRACT_ADDRESS =
-  "0xdac17f958d2ee523a2206206994597c13d831ec7";
 export const INJ_ERC20_CONTRACT_ADDRESS =
-  "0xe28b3b32b6c345a34ff64674606124dd5aceca30";
+  "0xe28b3B32B6c345A34Ff64674606124Dd5Aceca30";
+export const USDT_ERC20_CONTRACT_ADDRESS =
+  "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
 type BridgeStoreState = {
   erc20Balances: Array<{
@@ -50,12 +50,7 @@ export const useBridgeStore = defineStore("bridge", {
       );
 
       bridgeStore.$patch({
-        erc20Balances: tokenBalance.map((balance, index) => {
-          return {
-            ...balance,
-            contractAddress: contractAddresses[index],
-          };
-        }),
+        erc20Balances: tokenBalance,
       });
     },
 
